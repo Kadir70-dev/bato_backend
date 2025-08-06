@@ -1,4 +1,3 @@
-// models/index.js
 const { Sequelize, DataTypes } = require('sequelize');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -9,8 +8,9 @@ const sequelize = new Sequelize(
   process.env.DB_PASSWORD,
   {
     host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-    port: process.env.DB_PORT,
+    dialect: process.env.DB_DIALECT || 'mysql',
+    port: process.env.DB_PORT || 3306,
+    logging: false, // turn off logging
   }
 );
 
@@ -18,11 +18,11 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// Load models
+// Models
 db.User = require('./user.model')(sequelize, DataTypes);
 db.Appointment = require('./appointment')(sequelize, DataTypes);
 
-// Setup associations (if any)
+// Associations (optional)
 if (db.User.associate) db.User.associate(db);
 if (db.Appointment.associate) db.Appointment.associate(db);
 
